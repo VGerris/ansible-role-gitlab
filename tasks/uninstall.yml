@@ -1,0 +1,15 @@
+---
+- name: Uninstall gitlab
+  ansible.builtin.shell:
+    cmd: |
+      gitlab-ctl stop
+      apt-get purge gitlab-ce
+      rm -rf /opt/gitlab
+      rm -rf /var/opt/gitlab
+      rm -rf /etc/gitlab
+      rm -rf /var/log/gitlab 
+      apt-get autoremove
+    executable: /bin/bash
+  become: yes
+  become_user: "root"
+  #ignore_errors: yes

@@ -1,6 +1,7 @@
 # Ansible Role: GitLab
 
 **Deprecated**: In September 2023, I deprecated this role as I am no longer maintaining any GitLab instances, and use Gitea instead for my personal work. Please consider forking this role or use someone else's GitLab role.
+Update for this fork : added logic to create user and uninstall task - works with 16.6 if SSL is enabled.
 
 [![CI](https://github.com/geerlingguy/ansible-role-gitlab/workflows/CI/badge.svg?event=push)](https://github.com/geerlingguy/ansible-role-gitlab/actions?query=workflow%3ACI)
 
@@ -190,3 +191,7 @@ MIT / BSD
 ## Author Information
 
 This role was created in 2014 by [Jeff Geerling](http://jeffgeerling.com/), author of [Ansible for DevOps](http://ansiblefordevops.com/).
+
+## Uninstall
+
+ansible-playbook -i inventory uninstall.yml

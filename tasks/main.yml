@@ -79,3 +79,9 @@
     group: root
     mode: 0600
   notify: restart gitlab
+
+# The installation does not create a root user properly, this fixes that
+- name: Create admin user
+  ansible.builtin.shell:
+    cmd: gitlab-rails runner "u = User.new(username: 'root', email: 'root@example.com', name: 'root', password: '5iveL\!fe', password_confirmation: '5iveL\!fe'); u.admin = true;u.save!"
+  become_user: root

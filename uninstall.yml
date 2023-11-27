@@ -1,0 +1,7 @@
+- hosts: gitlab
+  remote_user: mykidong
+  become: true
+  
+  vars_files:
+  - "tasks/uninstall.yml"
+  
