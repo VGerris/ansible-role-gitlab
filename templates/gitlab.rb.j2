@@ -117,30 +117,35 @@ registry_nginx['ssl_certificate_key'] = "{{ gitlab_registry_nginx_ssl_certificat
 # https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md#changing-gitlab-yml-settings
 # https://goauthentik.io/integrations/services/gitlab/
 
-gitlab_rails['omniauth_enabled'] = false
-gitlab_rails['omniauth_allow_single_sign_on'] = ['saml']
-gitlab_rails['omniauth_sync_email_from_provider'] = 'saml'
-gitlab_rails['omniauth_sync_profile_from_provider'] = ['saml']
-gitlab_rails['omniauth_sync_profile_attributes'] = ['email']
-gitlab_rails['omniauth_auto_sign_in_with_provider'] = 'saml'
-gitlab_rails['omniauth_block_auto_created_users'] = false
-gitlab_rails['omniauth_auto_link_saml_user'] = true
-gitlab_rails['omniauth_providers'] = [
-  {
-    name: 'saml',
-    args: {
-      assertion_consumer_service_url: 'https://{{ gitlab_domain }}/users/auth/saml/callback',
-      # Shown when navigating to certificates in authentik
-      idp_cert_fingerprint: '4E:1E:CD:67:4A:67:5A:E9:6A:D0:3C:E6:DD:7A:F2:44:2E:76:00:6A',
-      idp_sso_target_url: 'https://{{ gitlab_authentik_url }}/application/saml/<authentik application slug>/sso/binding/redirect/',
-      issuer: '{{ gitlab_external_url }}',
-      name_identifier_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
-      attribute_statements: {
-        email: ['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
-        first_name: ['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
-        nickname: ['http://schemas.goauthentik.io/2021/02/saml/username']
-      }
-    },
-    label: 'authentik'
-  }
-]
+gitlab_rails['omniauth_enabled'] = {{ gitlab_omniauth_enabled | lower }}
+{% if gitlab_omniauth_enabled %}
+gitlab_rails['omniauth_allow_single_sign_on'] = {{ gitlab_omniauth_allow_single_sign_on | default(['openid_connect']) }}
+gitlab_rails['omniauth_sync_email_from_provider'] = {{ gitlab_omniauth_sync_email_from_provider | default('') }}
+gitlab_rails['omniauth_sync_profile_from_provider'] = {{ gitlab_omniauth_sync_profile_from_provider | default(['openid_connect']) }}
+gitlab_rails['omniauth_sync_profile_attributes'] = {{ gitlab_omniauth_sync_profile_attributes | default(['name', 'email']) }}
+gitlab_rails['omniauth_auto_sign_in_with_provider'] = {{ gitlab_omniauth_auto_sign_in_with_provider }}
+gitlab_rails['omniauth_block_auto_created_users'] = {{ gitlab_omniauth_block_auto_created_users | lower }}
+gitlab_rails['omniauth_auto_link_saml_user'] = {{ gitlab_omniauth_auto_link_saml_user | lower }}
+gitlab_rails['omniauth_providers'] = {{ gitlab_omniauth_providers }}
+{% endif %}
+
+## Example for SAML with Authentik
+#gitlab_rails['omniauth_providers'] = [
+#  {
+#    name: 'saml',
+#    args: {
+#      assertion_consumer_service_url: 'https://{{ gitlab_domain }}/users/auth/saml/callback',
+#      # Shown when navigating to certificates in authentik
+#      idp_cert_fingerprint: '4E:1E:CD:67:4A:67:5A:E9:6A:D0:3C:E6:DD:7A:F2:44:2E:76:00:6A',
+#      idp_sso_target_url: 'https://{{ gitlab_authentik_url }}/application/saml/<authentik application slug>/sso/binding/redirect/',
+#      issuer: '{{ gitlab_external_url }}',
+#      name_identifier_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
+#      attribute_statements: {
+#        email: ['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
+#        first_name: ['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
+#        nickname: ['http://schemas.goauthentik.io/2021/02/saml/username']
+#      }
+#    },
+#    label: 'authentik'
+#  }
+#]
