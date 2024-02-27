@@ -10,6 +10,6 @@
       rm -rf /var/log/gitlab 
       apt-get autoremove -y
     executable: /bin/bash
-  become: yes
+  become: true
   become_user: "root"
   #ignore_errors: yes

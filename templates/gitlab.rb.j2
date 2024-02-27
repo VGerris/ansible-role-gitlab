@@ -81,6 +81,63 @@ gitlab_rails['smtp_ca_path'] = '{{ gitlab_smtp_ca_path }}'
 gitlab_rails['smtp_ca_file'] = '{{ gitlab_smtp_ca_file }}'
 {% endif %}
 
+# Database settings
+### Enable or disable automatic database migrations
+# gitlab_rails['auto_migrate'] = true
+
+# Set root password before installation
+# gitlab_rails['initial_root_password'] = '{{ gitlab_initial_root_password | default("nonstandardr00tpassword") }}'
+
+# db version
+postgresql['version'] = '{{ gitlab_postgresql_version | default("15") }}'
+
+### This is advanced feature used by large gitlab deployments where loading
+### whole RAILS env takes a lot of time.
+# gitlab_rails['rake_cache_clear'] = true
+
+# Disable the built-in Postgres
+postgresql['enable'] = '{{ gitlab_postgresql_enable | default("false") }}'
+
+## GitLab database settings
+##! Docs: https://docs.gitlab.com/omnibus/settings/database.html
+##! **Only needed if you use an external database.**
+{% if gitlab_postgresql_enable != True %}
+gitlab_rails['db_adapter'] = '{{ gitlab_db_adapter | default("postgresql") }}'
+gitlab_rails['db_encoding'] = '{{ gitlab_db_encoding | default("utf8") }}'
+gitlab_rails['db_collation'] = nil
+gitlab_rails['db_database'] = '{{ gitlab_db_database | default("gitlabhq_production") }}'
+gitlab_rails['db_username'] = '{{ gitlab_db_username | default("gitlab") }}'
+gitlab_rails['db_password'] = '{{ gitlab_db_password | default("gitlab") }}'
+gitlab_rails['db_host'] = '{{ gitlab_db_host | default("localhost") }}'
+gitlab_rails['db_port'] = '{{ gitlab_db_port | default("5432") }}'
+gitlab_rails['db_socket'] = '{{ gitlab_db_socket | default("nil") }}'
+gitlab_rails['db_sslmode'] = '{{ gitlab_db_sslmode | default("nil") }}'
+gitlab_rails['db_sslrootcert'] = '{{ gitlab_db_sslrootcert | default("nil") }}'
+#gitlab_rails['db_sslcert'] = nil
+#gitlab_rails['db_sslkey'] = nil
+#gitlab_rails['db_prepared_statements'] = false
+#gitlab_rails['db_statements_limit'] = 1000
+#gitlab_rails['db_connect_timeout'] = nil
+#gitlab_rails['db_keepalives'] = nil
+#gitlab_rails['db_keepalives_idle'] = nil
+#gitlab_rails['db_keepalives_interval'] = nil
+#gitlab_rails['db_keepalives_count'] = nil
+#gitlab_rails['db_tcp_user_timeout'] = nil
+#gitlab_rails['db_application_name'] = nil
+#gitlab_rails['db_database_tasks'] = true
+
+#! Command to generate extra database configuration
+gitlab_rails['db_extra_config_command'] = nil
+
+## Gitlab decomposed database settings
+##! Docs: https://docs.gitlab.com/omnibus/settings/database.html
+#['main']['db_database'] = 'gitlabhq_production'
+#gitlab_rails['databases']['main']['database_tasks'] = true
+#gitlab_rails['databases']['ci']['enable'] = true
+#gitlab_rails['databases']['ci']['db_database'] = 'gitlabhq_production'
+#gitlab_rails['databases']['ci']['database_tasks'] = false
+{% endif %}
+
 # 2-way SSL Client Authentication.
 {% if gitlab_nginx_ssl_verify_client %}
 nginx['ssl_verify_client'] = "{{ gitlab_nginx_ssl_verify_client }}"

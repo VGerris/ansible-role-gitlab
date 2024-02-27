@@ -183,6 +183,13 @@ None.
 *Inside `vars/main.yml`*:
 
     gitlab_external_url: "https://gitlab.example.com/"
+    # database settings 
+    gitlab_postgresql_enable: false # use external postgres
+    gitlab_postgresql_version: 15
+    gitlab_db_sslmode: required # off, required, verify-full
+    gitlab_db_database: gitlabhq_production
+    gitlab_db_username: admin
+    gitlab_db_password: secret 
 
 ## License
 
