@@ -85,7 +85,6 @@
     cmd:
       echo "UPDATE application_settings SET signup_enabled = false" | gitlab-psql
   register: signup_disable_result
-  changed_when: "signup_disable_result.rc == 0"
 
 # The installation sets the password in /etc/gitlab/initial... which expires, this is to add another Admin user
 # - name: Create admin user
