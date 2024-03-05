@@ -80,10 +80,15 @@
     mode: 0600
   notify: restart gitlab
 
+- name: Disable sign-up for new users
+  command: >
+    echo "UPDATE application_settings SET signup_enabled = false" | gitlab-psql
+  when: echo "SELECT signup_enabled FROM application_settings" | gitlab-psql | grep -q f
+
 # The installation sets the password in /etc/gitlab/initial... which expires, this is to add another Admin user
 # - name: Create admin user
 #   ansible.builtin.shell:
 #     cmd: |
-#       gitlab-rails runner "u = User.new(username: 'root1', email: 'root@example.com', name: 'root', password: '5iveL\!fe', password_confirmation: '5iveL\!fe'); u.admin = true;u.save!"
-#   become_user: root
+#       gitlab-rails runner "u = User.new(username: 'root1', email: 'root@example.com', name: 'root', password: '5iveL\!fe', password_confirmation: '5iveL\!fe'); u.admin = true;u.assign_personal_namespace;u.save!"
+        # gitlab-rake "gitlab:password:reset[root]"
 #   ignore_errors: true
