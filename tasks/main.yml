@@ -83,9 +83,9 @@
 - name: Disable sign-up for new users
   ansible.builtin.shell:
     cmd:
-      gitlab-rails runner 'ApplicationSetting.last.update(signup_enabled: false)'
+      gitlab-rails runner '::Gitlab::CurrentSettings.update!(signup_enabled: false)'
   register: signup_disable_result
-  when: gitlab-rails runner 'puts ApplicationSetting.last.signup_enabled?' | grep -q false
+  when: gitlab_disable_user_signup
 
 # The installation sets the password in /etc/gitlab/initial... which expires, this is to add another Admin user
 # - name: Create admin user
