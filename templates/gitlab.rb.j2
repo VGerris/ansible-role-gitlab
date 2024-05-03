@@ -96,7 +96,7 @@ postgresql['version'] = '{{ gitlab_postgresql_version | default("15") }}'
 # gitlab_rails['rake_cache_clear'] = true
 
 # Disable the built-in Postgres
-postgresql['enable'] = '{{ gitlab_postgresql_enable | default("false") }}'
+postgresql['enable'] = {{ gitlab_postgresql_enable | lower }}
 
 ## GitLab database settings
 ##! Docs: https://docs.gitlab.com/omnibus/settings/database.html
