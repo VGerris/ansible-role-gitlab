@@ -83,7 +83,7 @@
 - name: Disable sign-up for new users
   ansible.builtin.shell:
     cmd:
-      gitlab-rails runner '::Gitlab::CurrentSettings.update!(signup_enabled: false)'
+      gitlab-rails runner "ApplicationSetting.last.update_attribute(:signup_enabled, false)"
   register: signup_disable_result
   when: gitlab_disable_user_signup
 

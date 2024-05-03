@@ -198,6 +198,7 @@ MIT / BSD
 ## Author Information
 
 This role was created in 2014 by [Jeff Geerling](http://jeffgeerling.com/), author of [Ansible for DevOps](http://ansiblefordevops.com/).
+Picked up by Vincent Gerris in 2024 :)
 
 ## Uninstall
 
