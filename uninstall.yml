@@ -1,6 +1,8 @@
-- hosts: gitlab
+- name: Uninstall gitlab
+  hosts: gitlab
   remote_user: root
   become: true
   
   tasks:
-  - include: "tasks/uninstall.yml"
+  - name: Uninstall task gitlab
+    ansible.builtin.include_tasks : "tasks/uninstall.yml"

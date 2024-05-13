@@ -7,9 +7,11 @@
       rm -rf /opt/gitlab
       rm -rf /var/opt/gitlab
       rm -rf /etc/gitlab
-      rm -rf /var/log/gitlab 
+      rm -rf /var/log/gitlab
       apt-get autoremove -y
     executable: /bin/bash
   become: true
   become_user: "root"
+  register: my_output
+  changed_when: my_output.rc != 0
   #ignore_errors: yes
