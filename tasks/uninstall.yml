@@ -14,4 +14,4 @@
   become_user: "root"
   register: my_output
   changed_when: my_output.rc != 0
-  #ignore_errors: yes
+  # ignore_errors: yes
