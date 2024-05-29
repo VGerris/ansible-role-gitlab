@@ -78,7 +78,7 @@
     owner: root
     group: root
     mode: 0600
-  notify: restart gitlab
+  notify: Restart gitlab
 
 - name: Disable sign-up for new users
   ansible.builtin.shell:
