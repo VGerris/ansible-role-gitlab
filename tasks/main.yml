@@ -14,12 +14,12 @@
 - name: Install GitLab dependencies.
   package:
     name: "{{ gitlab_dependencies }}"
-    ansible.builtin.stat: present
+    state: present
 
 - name: Install GitLab dependencies (Debian).
   ansible.builtin.apt:
     name: gnupg2
-    ansible.builtin.stat: present
+    state: present
   when: ansible_os_family == 'Debian'
 
 - name: Download GitLab repository installation script.
