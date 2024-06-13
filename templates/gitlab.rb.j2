@@ -189,6 +189,13 @@ gitlab_rails['omniauth_auto_link_saml_user'] = {{ gitlab_omniauth_auto_link_saml
 gitlab_rails['omniauth_providers'] = {{ gitlab_omniauth_providers }}
 {% endif %}
 
+# Settings advised when using a ( reverse ) proxy like caddy : https://gitlab.com/gitlab-org/gitlab-recipes/blob/master/web-server/caddy/README.md
+{% if gitlab_proxy_settings_enabled %}
+gitlab_workhorse['listen_network'] = "tcp"
+gitlab_workhorse['listen_addr'] = "127.0.0.1:8181"
+nginx['enable'] = "false"
+{% endif %}
+
 ## Example for SAML with Authentik
 #gitlab_rails['omniauth_providers'] = [
 #  {
