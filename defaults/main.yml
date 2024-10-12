@@ -8,7 +8,8 @@ gitlab_edition: "gitlab-ce"
 gitlab_version: ''
 gitlab_backup_path: "/var/opt/gitlab/backups"
 gitlab_config_template: "gitlab.rb.j2"
-gitlab_disable_user_signup: true
+gitlab_disable_user_signup: false
+# the above may cause issues at first run, disable by default  - TODO: find a good method that is persistent
 
 # SSL Configuration.
 gitlab_redirect_http_to_https: true
