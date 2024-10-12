@@ -3,7 +3,7 @@ dependencies: []
 
 galaxy_info:
   role_name: gitlab
-  author: geerlingguy
+  author: geerlingguy, vgerris
   description: GitLab Git web interface
   company: "Midwestern Mac, LLC"
   license: "license (BSD, MIT)"

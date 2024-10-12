@@ -1,7 +1,7 @@
 ---
 # General config.
-gitlab_domain: gitlab.binero.net
-gitlab_authentik_url: auth.binero.net
+gitlab_domain: gitlab.example.com
+gitlab_authentik_url: auth.example.com
 gitlab_external_url: "https://{{ gitlab_domain }}/"
 gitlab_git_data_dir: "/var/opt/gitlab/git-data"
 gitlab_edition: "gitlab-ce"

@@ -1,9 +1,9 @@
 # Ansible Role: GitLab
 
-**Deprecated**: In September 2023, I deprecated this role as I am no longer maintaining any GitLab instances, and use Gitea instead for my personal work. Please consider forking this role or use someone else's GitLab role.
-Update for this fork : added logic to create user and uninstall task - works with 16.6 if SSL is enabled.
+Update for this fork from geerlingguy ( who stopped maintaining it ) by Vincent Gerris: added logic to create user and uninstall task - works with 16.6 if SSL is enabled.
 
-[![CI](https://github.com/geerlingguy/ansible-role-gitlab/workflows/CI/badge.svg?event=push)](https://github.com/geerlingguy/ansible-role-gitlab/actions?query=workflow%3ACI)
+Extended to be able to setup OpenID ( Authentik, Keycloak, etc).
+Tested on Ubuntu 22.04 and 24.04. CI actions are disabled for now.
 
 Installs GitLab, a Ruby-based front-end to Git, on any RedHat/CentOS or Debian/Ubuntu linux system.
 
@@ -178,7 +178,7 @@ None.
       vars_files:
         - vars/main.yml
       roles:
-        - { role: geerlingguy.gitlab }
+        - { role: vgerris.gitlab }
 
 *Inside `vars/main.yml`*:
 
