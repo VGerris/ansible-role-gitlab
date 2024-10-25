@@ -3,16 +3,18 @@
   ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
 
 - name: Check if GitLab configuration file already exists.
-  ansible.builtin.stat: path=/etc/gitlab/gitlab.rb
+  ansible.builtin.stat:
+    path: /etc/gitlab/gitlab.rb
   register: gitlab_config_file
 
 - name: Check if GitLab is already installed.
-  ansible.builtin.stat: path=/usr/bin/gitlab-ctl
+  ansible.builtin.stat:
+    path: /usr/bin/gitlab-ctl
   register: gitlab_file
 
 # Install GitLab and its dependencies.
 - name: Install GitLab dependencies.
-  package:
+  ansible.builtin.package:
     name: "{{ gitlab_dependencies }}"
     state: present
 
@@ -27,11 +29,13 @@
     url: "{{ gitlab_repository_installation_script_url }}"
     dest: /tmp/gitlab_install_repository.sh
     validate_certs: "{{ gitlab_download_validate_certs }}"
+    mode: "0755"
   when: not gitlab_file.stat.exists
 
 - name: Install GitLab repository.
   ansible.builtin.command: bash /tmp/gitlab_install_repository.sh
   register: output
+  changed_when: output.rc != 0
   when: not gitlab_file.stat.exists
 
 - name: Define the Gitlab package name.
@@ -47,12 +51,34 @@
   poll: 5
   when: not gitlab_file.stat.exists
 
+# https://docs.gitlab.com/omnibus/settings/database.html
+- name: Create a symbolic link
+  ansible.builtin.file:
+    src: /usr/bin/pg_dump
+    dest: /opt/gitlab/bin/pg_dump
+    owner: root
+    group: root
+    state: link
+  when: not gitlab_postgresql_enable
+# https://docs.gitlab.com/omnibus/settings/database.html
+- name: Symlink psql
+  ansible.builtin.file:
+    src: /usr/bin/psql
+    dest: /opt/gitlab/bin/psql
+    owner: root
+    group: root
+    state: link
+  when: not gitlab_postgresql_enable
+
 # Start and configure GitLab. Sometimes the first run fails, but after that,
 # restarts fix problems, so ignore failures on this run.
 - name: Reconfigure GitLab (first run).
-  ansible.builtin.command: >
-    gitlab-ctl reconfigure
-    creates=/var/opt/gitlab/bootstrapped
+  ansible.builtin.shell:
+    cmd:
+      gitlab-ctl reconfigure
+      creates=/var/opt/gitlab/bootstrapped
+  become: true
+  become_user: root
   failed_when: false
 
 - name: Create GitLab SSL configuration folder.
@@ -61,14 +87,17 @@
     state: directory
     owner: root
     group: root
-    mode: 0700
+    mode: "0700"
   when: gitlab_create_self_signed_cert
 
-- name: Create self-signed certificate.
-  ansible.builtin.command: >
-    openssl req -new -nodes -x509 -subj "{{ gitlab_self_signed_cert_subj }}"
-    -days 3650 -keyout {{ gitlab_ssl_certificate_key }} -out {{ gitlab_ssl_certificate }} -extensions v3_ca
-    creates={{ gitlab_ssl_certificate }}
+- name: Create self-signed certificate
+  ansible.builtin.shell:
+    cmd:
+      openssl req -new -nodes -x509 -subj "{{ gitlab_self_signed_cert_subj }}" -days 3650 -keyout {{ gitlab_ssl_certificate_key }} -out {{ gitlab_ssl_certificate }} -extensions v3_ca
+    executable: /bin/bash
+    creates: "{{ gitlab_ssl_certificate }}"
+  become: true
+  become_user: root
   when: gitlab_create_self_signed_cert
 
 - name: Copy GitLab configuration file.
@@ -77,7 +106,7 @@
     dest: /etc/gitlab/gitlab.rb
     owner: root
     group: root
-    mode: 0600
+    mode: "0600"
   notify: Restart gitlab
 
 - name: Disable sign-up for new users
@@ -86,6 +115,8 @@
       echo "UPDATE application_settings SET signup_enabled = false" | gitlab-psql
   register: signup_disable_result
   when: gitlab_disable_user_signup
+  ignore_errors: true
+  changed_when: signup_disable_result.rc != 0
 
 # The installation sets the password in /etc/gitlab/initial... which expires, this is to add another Admin user
 # - name: Create admin user

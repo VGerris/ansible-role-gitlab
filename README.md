@@ -183,13 +183,13 @@ None.
 *Inside `vars/main.yml`*:
 
     gitlab_external_url: "https://gitlab.example.com/"
-    # database settings 
+    # database settings
     gitlab_postgresql_enable: false # use external postgres
     gitlab_postgresql_version: 15
     gitlab_db_sslmode: required # off, required, verify-full
     gitlab_db_database: gitlabhq_production
     gitlab_db_username: admin
-    gitlab_db_password: secret 
+    gitlab_db_password: secret
 
 ## License
 
@@ -203,3 +203,19 @@ Picked up by Vincent Gerris in 2024 :)
 ## Uninstall
 
 ansible-playbook -i inventory uninstall.yml
+
+# pre-commit - added for linting and cleaning
+
+To setup:
+
+```bash
+pre-commit install
+```
+
+To run :
+
+```bash
+pre-commit run --all-files
+```
+
+It will trigger at every commit
