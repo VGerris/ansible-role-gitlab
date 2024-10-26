@@ -76,7 +76,7 @@
   ansible.builtin.shell:
     cmd:
       gitlab-ctl reconfigure
-      creates=/var/opt/gitlab/bootstrapped
+    creates: /var/opt/gitlab/bootstrapped
   become: true
   become_user: root
   failed_when: false
