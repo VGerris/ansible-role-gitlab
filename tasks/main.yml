@@ -112,7 +112,8 @@
 - name: Disable sign-up for new users
   ansible.builtin.shell:
     cmd:
-      echo "UPDATE application_settings SET signup_enabled = false" | gitlab-psql
+      # echo "UPDATE application_settings SET signup_enabled = false" | gitlab-psql
+      echo "UPDATE application_settings SET signup_enabled = false" | PGPASSWORD="{{ gitlab_password }}" psql -U "{{ gitlab_username }}" -h "{{ gitlab_hostname }}" -p "{{ gitlab_port }}" "{{gitlab_database}}"
   register: signup_disable_result
   when: gitlab_disable_user_signup
   ignore_errors: true
