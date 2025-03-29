@@ -93,7 +93,7 @@
 - name: Create self-signed certificate
   ansible.builtin.shell:
     cmd:
-      openssl req -new -nodes -x509 -subj "{{ gitlab_self_signed_cert_subj }}" -days 3650 -keyout {{ gitlab_ssl_certificate_key }} -out {{ gitlab_ssl_certificate }} -extensions v3_ca
+      openssl req -new -nodes -x509 -subj "{{ gitlab_self_signed_cert_subj }}" -addtext "subjectAltName = DNS:{{ gitlab_self_signed_cert_subj }}" -days 3650 -keyout {{ gitlab_ssl_certificate_key }} -out {{ gitlab_ssl_certificate }} -extensions v3_ca
     executable: /bin/bash
     creates: "{{ gitlab_ssl_certificate }}"
   become: true
