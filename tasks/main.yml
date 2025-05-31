@@ -57,6 +57,11 @@
     path: "/usr/bin/pg_dump"
   register: pgdump_result
 
+- name: Check if psql file exists
+  ansible.builtin.stat:
+    path: "/usr/bin/psql"
+  register: psql_result
+
 # https://docs.gitlab.com/omnibus/settings/database.html
 - name: Create a symbolic link
   ansible.builtin.file:
@@ -75,7 +80,7 @@
     owner: root
     group: root
     state: link
-  when: not gitlab_postgresql_enable
+  when: not gitlab_postgresql_enable and psql_result.stat.exists
 
 # Start and configure GitLab. Sometimes the first run fails, but after that,
 # restarts fix problems, so ignore failures on this run.
