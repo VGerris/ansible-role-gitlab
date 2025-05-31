@@ -51,6 +51,12 @@
   poll: 5
   when: not gitlab_file.stat.exists
 
+# If pgsql client is installed we use that in gitlab too
+- name: Check if pgdump file exists
+  ansible.builtin.stat:
+    path: "/usr/bin/pg_dump"
+  register: pgdump_result
+
 # https://docs.gitlab.com/omnibus/settings/database.html
 - name: Create a symbolic link
   ansible.builtin.file:
@@ -59,7 +65,8 @@
     owner: root
     group: root
     state: link
-  when: not gitlab_postgresql_enable
+  when: not gitlab_postgresql_enable and pgdump_result.stat.exists
+
 # https://docs.gitlab.com/omnibus/settings/database.html
 - name: Symlink psql
   ansible.builtin.file:
