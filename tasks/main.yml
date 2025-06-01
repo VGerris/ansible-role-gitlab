@@ -128,7 +128,7 @@
       # echo "UPDATE application_settings SET signup_enabled = false" | PGPASSWORD="{{ gitlab_password }}" psql -U "{{ gitlab_username }}" -h "{{ gitlab_hostname }}" -p "{{ gitlab_port }}" "{{gitlab_database}}"
       gitlab-rails runner 'ApplicationSetting.last.update(signup_enabled{{':'}} false)'
   register: signup_disable_result
-  when: gitlab_disable_user_signup
+  when: gitlab_disable_user_signup and not gitlab_file.stat.exists
   ignore_errors: true
   changed_when: signup_disable_result.rc != 0
 
